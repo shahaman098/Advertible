@@ -58,7 +58,7 @@ The two flows run in parallel and meet in the middle. No briefing calls. No back
 
 ## Architecture
 
-[![Advertable Architecture Diagram](./architecture.png)](https://drive.google.com/drive/home?dmr=1&ec=wgc-drive-globalnav-goto)
+![Advertable Architecture Diagram](./architecture.png)
 
 The diagram shows both parallel flows and where they converge.
 
