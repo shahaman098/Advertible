@@ -1,0 +1,7 @@
+fal-client==0.14.1
+fastapi==0.115.12
+imageio-ffmpeg==0.5.1
+python-dotenv==1.0.1
+python-multipart==0.0.9
+scenedetect[opencv]==0.6.4
+uvicorn[standard]==0.34.2

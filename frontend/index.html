@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scene Editing Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Scene Editing Demo</p>
+        <h1>Try the object replacement backend</h1>
+        <p class="subcopy">
+          Upload a source video and a product image, or paste URLs if you
+          already have them hosted. The backend builds a photorealistic anchor with GPT Image 2,
+          then uses PixVerse Swap to replace the target person, object, or background in the original video.
+        </p>
+      </section>
+
+      <section class="panel">
+        <form id="job-form" class="form">
+          <label>
+            Source video URL
+            <input
+              id="source_video_url"
+              name="source_video_url"
+              type="url"
+              placeholder="https://example.com/video.mp4"
+            />
+          </label>
+          <p class="field-hint">
+            PixVerse is most economical around 5-second clips, but this backend accepts clips up to
+            30 seconds for infrastructure testing. Longer clips cost more and may process slower.
+          </p>
+
+          <label>
+            or upload source video
+            <input
+              id="source_video_file"
+              name="source_video_file"
+              type="file"
+              accept="video/*"
+            />
+          </label>
+
+          <label>
+            Reference image URL
+            <input
+              id="reference_image_url"
+              name="reference_image_url"
+              type="url"
+              placeholder="https://example.com/product.png"
+            />
+          </label>
+
+          <label>
+            or upload reference image
+            <input
+              id="reference_image_file"
+              name="reference_image_file"
+              type="file"
+              accept="image/*"
+            />
+          </label>
+
+          <label>
+            Anchor prompt
+            <textarea id="anchor_prompt" name="anchor_prompt" rows="3">
+Replace the original object with the product from the reference image. Match the scene lighting, reflections, contact shadows, scale, and perspective so the product looks naturally embedded in the shot. Do not relight, recolor, denoise, sharpen, stylize, add glow, add halos, smooth edges, or alter any person, background, camera texture, grain, exposure, shadows, or non-product pixels.</textarea
+            >
+          </label>
+          <p class="field-hint">
+            Sent to GPT Image 2 to synthesise a photorealistic anchor frame by editing the first
+            frame with the reference image. Describe lighting, reflections, materials, or placement constraints.
+          </p>
+
+          <div class="grid">
+            <label>
+              PixVerse swap mode
+              <select id="pixverse_mode" name="pixverse_mode">
+                <option value="object" selected>Object</option>
+                <option value="person">Person</option>
+                <option value="background">Background</option>
+              </select>
+            </label>
+
+            <label>
+              Keyframe ID
+              <input id="pixverse_keyframe_id" name="pixverse_keyframe_id" type="number" min="1" step="1" value="1" />
+            </label>
+          </div>
+          <p class="field-hint">
+            PixVerse maps the swap from the selected keyframe at 24 FPS. Use 1 for the first frame,
+            24 for about 1 second in, 48 for about 2 seconds in, and so on.
+          </p>
+
+          <div class="grid">
+            <label>
+              PixVerse resolution
+              <select id="pixverse_resolution" name="pixverse_resolution">
+                <option value="360p">360p</option>
+                <option value="540p">540p</option>
+                <option value="720p" selected>720p</option>
+              </select>
+            </label>
+
+            <label>
+              PixVerse seed (optional)
+              <input id="pixverse_seed" name="pixverse_seed" type="number" min="0" step="1" />
+            </label>
+          </div>
+
+          <label class="checkbox-label">
+            <input id="preserve_original_audio" name="preserve_original_audio" type="checkbox" checked />
+            Preserve original audio
+          </label>
+
+          <button id="submit-button" type="submit">Start replacement job</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Job status</h2>
+          <button id="refresh-latest" type="button" class="secondary">Load latest job</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div id="job-summary" class="job-summary hidden">
+          <div><span>Job ID</span><strong id="job-id">-</strong></div>
+          <div><span>Status</span><strong id="job-status">-</strong></div>
+          <div><span>Current stage</span><strong id="job-stage">-</strong></div>
+          <div><span>Updated</span><strong id="job-updated">-</strong></div>
+        </div>
+
+        <div class="stages">
+          <article class="stage-card">
+            <h3>Anchor frame (GPT Image 2)</h3>
+            <p id="anchor-status">pending</p>
+          </article>
+          <article class="stage-card">
+            <h3>Video swap (PixVerse)</h3>
+            <p id="pixverse-status">pending</p>
+          </article>
+        </div>
+
+        <div id="artifacts" class="artifacts hidden"></div>
+
+        <details class="json-panel">
+          <summary>Raw job JSON</summary>
+          <pre id="job-json">No job loaded yet.</pre>
+        </details>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

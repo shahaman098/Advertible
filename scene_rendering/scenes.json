@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-04-25T18:12:20.340135Z",
+  "status": "completed",
+  "source_video_url": "http://127.0.0.1:8765/video.mp4",
+  "threshold": 27.0,
+  "scenes_json_path": "/api/scene-rendering",
+  "scene_count": 1,
+  "scenes": [
+    {
+      "scene_number": 1,
+      "start_timecode": "00:00:00.000",
+      "end_timecode": "00:00:10.467",
+      "start_seconds": 0.0,
+      "end_seconds": 10.467,
+      "duration_seconds": 10.467
+    }
+  ]
+}
